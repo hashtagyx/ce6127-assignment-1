@@ -59,7 +59,7 @@ namespace CE6127.Tanks.AI
         public void ChangeState(BaseState newState)
         {
             m_CurrentState?.Exit();
-
+            Debug.Log(m_CurrentState + " to " + newState);
             m_CurrentState = newState;
             m_CurrentState.Enter();
         }

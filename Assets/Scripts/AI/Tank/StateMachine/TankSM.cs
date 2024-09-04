@@ -15,13 +15,15 @@ namespace CE6127.Tanks.AI
         protected internal struct States
         {
             // States:
-            public IdleState Idle;
+            // public IdleState Idle;
             public PatrollingState Patrolling;
+            public PursuitState Pursuit;
 
             internal States(TankSM sm)
             {
-                Idle = new IdleState(sm);
+                // Idle = new IdleState(sm);
                 Patrolling = new PatrollingState(sm);
+                Pursuit = new PursuitState(sm);
             }
         }
 
@@ -74,7 +76,7 @@ namespace CE6127.Tanks.AI
         /// <summary>
         /// Method <c>GetInitialState</c> returns the initial state of the state machine.
         /// </summary>
-        protected override BaseState GetInitialState() => m_States.Idle;
+        protected override BaseState GetInitialState() => m_States.Patrolling;
 
         /// <summary>
         /// Method <c>SetNavMeshAgent</c> sets the NavMeshAgent's speed and angular speed.
@@ -192,6 +194,11 @@ namespace CE6127.Tanks.AI
             // Change the clip to the firing clip and play it.
             SFXAudioSource.clip = ShotFiringAudioClip;
             SFXAudioSource.Play();
+        }
+
+        public void SetStopDistanceTo(float distance)
+        {
+            NavMeshAgent.stoppingDistance = distance;
         }
     }
 }

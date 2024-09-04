@@ -13,7 +13,9 @@ namespace CE6127.Tanks.AI
     {
         private TankSM m_TankSM;        // Reference to the tank state machine.
         private Vector3 m_Destination;  // Destination for the tank to move to.
+        private float m_RotationSpeed = 8f;
 
+        private float m_RaycastDist = 9999999999f;
         /// <summary>
         /// Constructor <c>PatrollingState</c> constructor.
         /// </summary>
@@ -31,17 +33,28 @@ namespace CE6127.Tanks.AI
             m_TankSM.StartCoroutine(Patrolling());
         }
 
+        // private void FixedUpdate()
+        // {
+        //     m_TankSM.transform.Rotate(0f, m_RotationSpeed, 0f);
+        // }
         /// <summary>
         /// Method <c>Update</c> update logic.
         /// </summary>
         public override void Update()
         {
             base.Update();
-            if (m_TankSM.Target != null)
+            
+            m_TankSM.transform.Rotate(0f, m_RotationSpeed, 0f);
+            // Raycast for the human tank
+            if (Physics.Raycast(m_TankSM.transform.position, m_TankSM.transform.forward, out RaycastHit hit, m_RaycastDist, LayerMask.GetMask("Players")))
+            // if (Physics.Raycast(m_TankSM.transform.position, m_TankSM.transform.forward, out RaycastHit hit, m_RaycastDist))
             {
-                var dist = Vector3.Distance(m_TankSM.transform.position, m_TankSM.Target.position);
-                if (dist <= m_TankSM.StopDistance) // ... Obviously this doesn't make much sense, but it's just for demonstration purposes.
-                    m_StateMachine.ChangeState(m_TankSM.m_States.Idle);
+                if (hit.collider.CompareTag("Player")) // Assuming the human tank has the "Player" tag
+                {
+                    // Target spotted, switch to pursuit state
+                    m_TankSM.Target = hit.collider.gameObject.transform;
+                    m_StateMachine.ChangeState(m_TankSM.m_States.Pursuit);
+                }
             }
 
             if (Time.time >= m_TankSM.NavMeshUpdateDeadline)
