@@ -13,9 +13,9 @@ namespace CE6127.Tanks.AI
     {
         private TankSM m_TankSM;        // Reference to the tank state machine.
         private Vector3 m_Destination;  // Destination for the tank to move to.
-        private float m_RotationSpeed = 8f;
+        private float m_RotationSpeed = 8f; // Rotation speed of the tank
 
-        private float m_RaycastDist = 9999999999f;
+        private float m_RaycastDist = 9999999999f; // Raycast max distance from the tank
         /// <summary>
         /// Constructor <c>PatrollingState</c> constructor.
         /// </summary>
@@ -33,13 +33,7 @@ namespace CE6127.Tanks.AI
             m_TankSM.StartCoroutine(Patrolling());
         }
 
-        // private void FixedUpdate()
-        // {
-        //     m_TankSM.transform.Rotate(0f, m_RotationSpeed, 0f);
-        // }
-        /// <summary>
-        /// Method <c>Update</c> update logic.
-        /// </summary>
+
         public override void Update()
         {
             base.Update();

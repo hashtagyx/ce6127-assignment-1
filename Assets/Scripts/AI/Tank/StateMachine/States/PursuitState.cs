@@ -14,7 +14,7 @@ namespace CE6127.Tanks.AI
         {
             base.Enter();
             // Set a suitable stopping distance for pursuit
-            m_TankSM.SetStopDistanceTo(10f); // Example: Stop 2 units away from the target
+            m_TankSM.SetStopDistanceTo(10f);
             nextFireTime = Time.time; // Initialize fire time
         }
 
@@ -22,11 +22,19 @@ namespace CE6127.Tanks.AI
         {
             base.Update();
             
+            // Calculate the direction vector from the tank to the target
             Vector3 directionToTarget = m_TankSM.Target.position - m_TankSM.transform.position;
+
+            // Create a rotation that points the tank in the direction of the target
             Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+
+            // Smoothly rotate the tank towards the target using spherical interpolation (slerp)
             m_TankSM.transform.rotation = Quaternion.Slerp(m_TankSM.transform.rotation, targetRotation, Time.deltaTime * 5f);
 
+            // Get the current position of the target
             Vector3 targetPosition = m_TankSM.Target.position;
+
+            // Calculate the distance between the tank and the target
             float distanceToTarget = Vector3.Distance(m_TankSM.transform.position, targetPosition);
 
             // Follow the target
@@ -41,7 +49,6 @@ namespace CE6127.Tanks.AI
                     float projectilePower = Mathf.Lerp(m_TankSM.LaunchForceMinMax.x, m_TankSM.LaunchForceMinMax.y , distanceToTarget / (m_TankSM.LaunchForceMinMax.y - m_TankSM.LaunchForceMinMax.x)); 
                     m_TankSM.LaunchProjectile(projectilePower);
 
-                    // change this to based on the tank's distance to the target
                     nextFireTime = Time.time + m_TankSM.FireInterval.x; // Control fire rate
                 }
             }
